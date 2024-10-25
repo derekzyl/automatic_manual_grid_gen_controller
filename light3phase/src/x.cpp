@@ -76,7 +76,6 @@ void selectMode(Mode mode);
 void buttonPress();
 void checkPowerSources();
 void ledControl(int led, boolean state);
-void updateLEDs();
 void manualMode();
 void semiAutoMode();
 void fullyAutoMode();
@@ -160,12 +159,6 @@ void loop() {
   if (currentTime - lastPowerCheckTime >= POWER_CHECK_DELAY) {
     checkPowerSources();
     lastPowerCheckTime = currentTime;
-  }
-  
- // Update LEDs periodically
-  if (currentTime - lastLedUpdateTime >= LED_UPDATE_INTERVAL) {
-    updateLEDs();
-    lastLedUpdateTime = currentTime;
   }
   
   // sendLedData();
@@ -364,6 +357,52 @@ if(on_grid == false) {
 
 
 
+// this is the various helper functions
+
+/**
+ * The function `turnOnAlarm` turns on an alarm by setting the alarm pin to HIGH for 10 seconds and
+ * then turning it off.
+ */
+// void turnOnAlarm() {
+//   digitalWrite(alarm_pin, HIGH);
+//   delay(5000);
+//   digitalWrite(alarm_pin, LOW);
+
+//   sendLedData();
+
+// }
+
+/**
+ * The function `turnLoadOn` attempts to turn on a load relay and checks for any failures during the
+ * process.
+ * 
+ * @return The function `turnLoadOn()` returns a boolean value - either `true` or `false` based on the
+ * conditions inside the function.
+ */
+// boolean turnLoadOn() {
+
+//   digitalWrite(load_relay, HIGH);
+//   load_on = true;
+//   delay(10000);
+//   if(digitalRead(load_check) == LOW) {
+
+// loadFailAction( );
+//     return false;
+
+//   }
+//   else {
+//     digitalWrite(load_fail_led, HIGH);
+//     digitalWrite(load_relay, HIGH);
+//     load_on = true;
+//     load_fail = false;
+//     return true;
+//     }
+//   sendLedData();
+
+// }
+
+
+
 // Modified power control functions
 boolean turnLoadOn() {
   digitalWrite(load_relay, HIGH);
@@ -391,6 +430,82 @@ boolean turnLoadOn() {
   }
   return true;
 }
+
+
+/**
+ * The function `turnGenOn` turns on a generator and checks for any failures.
+ * 
+ * @return The `turnGenOn()` function returns a boolean value. If the generator check is successful, it
+ * returns `true`. If the generator check fails, it returns `false`.
+ */
+// boolean turnGenOn() {
+//   digitalWrite(grid_relay, LOW);
+//     digitalWrite(load_relay, LOW);
+//     //led controls
+//   digitalWrite(grid_on_led, HIGH);
+
+//   digitalWrite(generator_relay, HIGH);
+//   gen_on = true;
+//     sendLedData();
+//   delay(5000);
+//   if(digitalRead(generator_check) == LOW) {
+//     digitalWrite(grid_relay, LOW);
+//     //led controls
+//     digitalWrite(gen_fail_led, HIGH);
+
+//      ledControl(gen_on_led, false);
+//     gen_on = false;
+//     turnOnAlarm();
+//     return false;
+//   } else {
+
+//     //led controls
+//     digitalWrite(gen_fail_led, HIGH);
+//     ledControl(gen_on_led, false);
+//     return true;
+//   }
+//   sendLedData();
+
+// }
+
+// /**
+//  * The function `turnGridOn` attempts to turn on the grid by activating relays and checking for
+//  * successful grid connection.
+//  * 
+//  * @return The function `turnGridOn()` will return a boolean value. If the grid check is LOW, it will
+//  * return `false`. Otherwise, it will return `true`.
+//  */
+// boolean turnGridOn() {
+//   digitalWrite(generator_relay, LOW);
+//  digitalWrite(load_relay, LOW);
+//   digitalWrite(grid_relay, HIGH);
+
+//   //led control
+//     digitalWrite(grid_on_led, LOW);
+//   ledControl(gen_on_led, true);
+//   gen_on = false;
+//   sendLedData();
+//   delay(5000);
+//   if(digitalRead(grid_check) == LOW) {
+    
+//     digitalWrite(grid_relay, LOW);
+//     // digitalWrite(load_relay, LOW);
+// ledControl(grid_on_led, false);
+
+
+//     grid_on = false;
+
+//     return false;
+//   } else {
+//     //led control
+//     digitalWrite(grid_on_led, LOW);
+//     return true;
+//   }
+//   sendLedData();
+
+// }
+
+
 
 
 // Update LEDs function
@@ -709,3 +824,52 @@ void processMessage(String message) {
     Serial.println("Unknown command");
   }
 }
+
+// // lets handle the bluetooth communication for receiving data from the app
+
+// /**
+//  * The function `receiveData` reads a command from the serial input and selects a mode based on the
+//  * received command.
+//  */
+// void receiveData() {
+//  if (Serial.available() > 0) {
+//   Serial.print("inside bluetooth");
+//   // the commands are: 
+//   const  char command = Serial.read();
+
+//   String message = String(command);
+//   Serial.print(message);
+// switch (command)
+// {
+// case 'manual':{
+//   Serial.print("manual");
+//   selectMode(MANUAL);
+//   break;}
+// case 'semi':
+//   selectMode(SEMI_AUTO);
+//   break;
+
+
+// case 'auto':
+//   selectMode(FULLY_AUTO);
+
+//   break;
+//   case 'gen':{
+//  if(currentMode == MANUAL || currentMode == SEMI_AUTO )  controlMode(GEN);
+//   break;}
+//   case 'grid':{
+//   if(currentMode == MANUAL || currentMode == SEMI_AUTO ) controlMode(GRID);
+//   break;}
+//   case 'stop':
+//   {
+//     if(currentMode == MANUAL || currentMode == SEMI_AUTO )  controlMode(STOP);
+//   break;
+// }
+// default:
+//   break;
+// }
+
+
+
+//   }}
+
