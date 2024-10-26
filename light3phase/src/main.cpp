@@ -76,7 +76,6 @@ void selectMode(Mode mode);
 void buttonPress();
 void checkPowerSources();
 void ledControl(int led, boolean state);
-void updateLEDs();
 void manualMode();
 void semiAutoMode();
 void fullyAutoMode();
@@ -160,12 +159,6 @@ void loop() {
   if (currentTime - lastPowerCheckTime >= POWER_CHECK_DELAY) {
     checkPowerSources();
     lastPowerCheckTime = currentTime;
-  }
-  
- // Update LEDs periodically
-  if (currentTime - lastLedUpdateTime >= LED_UPDATE_INTERVAL) {
-    updateLEDs();
-    lastLedUpdateTime = currentTime;
   }
   
   // sendLedData();
@@ -364,6 +357,7 @@ if(on_grid == false) {
 
 
 
+
 // Modified power control functions
 boolean turnLoadOn() {
   digitalWrite(load_relay, HIGH);
@@ -391,6 +385,8 @@ boolean turnLoadOn() {
   }
   return true;
 }
+
+
 
 
 // Update LEDs function
@@ -709,3 +705,4 @@ void processMessage(String message) {
     Serial.println("Unknown command");
   }
 }
+
